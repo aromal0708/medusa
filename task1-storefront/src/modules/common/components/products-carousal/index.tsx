@@ -1,18 +1,34 @@
 "use client"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import ProductCard from "../products-card"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { listProducts } from "@lib/data/products"
+import { StoreProduct } from "@medusajs/types"
 
-const ProductsPagination = () => {
+const ProductCarousal = ({ countryCode }: { countryCode: string }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const [products, setProducts] = useState<StoreProduct[]>([])
 
-  const productData = {
-    id: 1,
-    name: "Juice Factory",
-    image: "/assets/product2.jpeg",
-    price: "$39.00",
-    description: "Maximum energy and Minumum calories",
+  const fetchProducts = async () => {
+    const products = await listProducts({ countryCode }).then(
+      ({ response }) => response.products
+    )
+    setProducts(products)
   }
+
+  useEffect(() => {
+    fetchProducts()
+    console.log("First product fetched:", products[0])
+  }, [])
+
+  console.log("Products fetched for carousel:", products)
+  // const productData = {
+  //   id: 1,
+  //   name: "Juice Factory",
+  //   image: "/assets/product2.jpeg",
+  //   price: "$39.00",
+  //   description: "Maximum energy and Minumum calories",
+  // }
 
   const handleScrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -51,9 +67,9 @@ const ProductsPagination = () => {
             scrollbarColor: "#ca8a04 #fde047",
           }}
         >
-          {Array.from({ length: 11 }, (_, index) => (
-            <div key={index} className="flex-shrink-0 w-64">
-              <ProductCard product={productData} />
+          {products.map((product,index) => (
+            <div key={product.id || index} className="flex-shrink-0 w-64">
+              <ProductCard product={product} />
             </div>
           ))}
         </div>
@@ -77,4 +93,4 @@ const ProductsPagination = () => {
   )
 }
 
-export default ProductsPagination
+export default ProductCarousal

@@ -1,15 +1,25 @@
+"use client"
 import Image from "next/image"
+import { useEffect, useState } from "react"
+import { listProducts } from "@lib/data/products"
 import ProductCard from "../products-card"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { StoreProduct } from "@medusajs/types"
 
-const BestProducts = () => {
-  const productData = {
-    id: 1,
-    name: "Juice Factory",
-    image: "/assets/product2.jpeg",
-    price: "$39.00",
-    description: "Maximum energy and Minumum calories",
+const BestProducts = ({ countryCode }: { countryCode: string }) => {
+  const [products, setProducts] = useState<StoreProduct[]>([])
+
+  const fetchProducts = async () => {
+    const products = await listProducts({ countryCode }).then(
+      ({ response }) => response.products
+    )
+    setProducts(products)
   }
+
+  useEffect(() => {
+    fetchProducts()
+    console.log("First product fetched:", products[0])
+  }, [])
   return (
     <div className="w-full flex flex-row items-center gap-x-10 justify-center my-16 px-10">
       <aside className="relative max-w-lg rounded-lg">
@@ -34,7 +44,7 @@ const BestProducts = () => {
         </p>
 
         <div className="flex-shrink-0 w-64">
-          <ProductCard product={productData} />
+          <ProductCard product={products[0]} />
           <div className="flex items-end justify-end gap-4 mt-2 w-full">
             <button className="w-10 h-10 rounded-full bg-yellow-600 bg-opacity-20 flex items-center justify-center hover:bg-opacity-30 transition-all">
               <ChevronLeft size={20} className="text-gray-700" />

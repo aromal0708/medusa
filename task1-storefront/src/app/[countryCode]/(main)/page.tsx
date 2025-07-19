@@ -1,11 +1,9 @@
 import { Metadata } from "next"
-
-import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
 import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 import Certificate from "@modules/common/components/certificate"
-import ProductsPagination from "@modules/common/components/products-pagination"
+import ProductCarousal from "@modules/common/components/products-carousal"
 import KeyFeatures from "@modules/common/components/key-features"
 import Button from "@modules/common/components/button"
 import BestProducts from "@modules/common/components/best-products"
@@ -44,7 +42,7 @@ export default async function Home(props: {
         <Certificate />
         <Certificate />
       </div>
-      <ProductsPagination />
+      <ProductCarousal countryCode={countryCode} />
       <div className="flex flex-col items-center justify-center my-10">
         <span className="text-7xl font-extrabold text-primary ">
           Better For You, Better For The Planet
@@ -54,7 +52,7 @@ export default async function Home(props: {
       <div className="w-full flex flex-col items-center justify-center my-10">
         <Button text="More about Juice Factory" />
       </div>
-      <BestProducts />
+      <BestProducts countryCode={countryCode} />
     </div>
   )
 }

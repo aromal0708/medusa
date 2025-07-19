@@ -59,10 +59,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     notFound()
   }
 
-  const product = await listProducts({
+  // Get all products and find the one with matching handle
+  const allProducts = await listProducts({
     countryCode: params.countryCode,
-    queryParams: { handle },
-  }).then(({ response }) => response.products[0])
+    queryParams: { limit: 1000, fields: "handle" }, // Get more products to search through
+  }).then(({ response }) => response.products)
+
+  const product = allProducts.find(p => p.handle === handle)
 
   if (!product) {
     notFound()
@@ -87,10 +90,13 @@ export default async function ProductPage(props: Props) {
     notFound()
   }
 
-  const pricedProduct = await listProducts({
+  // Get all products and find the one with matching handle
+  const allProducts = await listProducts({
     countryCode: params.countryCode,
-    queryParams: { handle: params.handle },
-  }).then(({ response }) => response.products[0])
+    queryParams: { limit: 1000, fields: "handle" }, // Get more products to search through
+  }).then(({ response }) => response.products)
+
+  const pricedProduct = allProducts.find(p => p.handle === params.handle)
 
   if (!pricedProduct) {
     notFound()
